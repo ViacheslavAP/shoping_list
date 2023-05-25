@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Shoping List</string>
+    <string name="add_shop_item_content_description">Add new shop item</string>
+    <string name="title_activity_shop_item">ShopItemActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="name">Name:</string>
+    <string name="count">Count:</string>
+    <string name="save">Save</string>
 </resources>

@@ -1,5 +1,6 @@
 package ru.perelyginva.shopinglist.domain.repository
 
+import androidx.lifecycle.LiveData
 import ru.perelyginva.shopinglist.domain.ShopItem
 
 interface ShopListRepository {
@@ -12,5 +13,5 @@ interface ShopListRepository {
 
     fun getShopItem(shopItemId: Int): ShopItem
 
-    fun getShopList(): List<ShopItem>
+    fun getShopList(): LiveData<List<ShopItem>>
 }
