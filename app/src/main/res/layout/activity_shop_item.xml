@@ -58,6 +58,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/btn_margin_min"
+        android:layout_marginEnd="@dimen/btn_margin_min"
+        android:layout_marginBottom="@dimen/btn_margin_top_bottom"
         android:text="@string/save"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
