@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnAddShopItem.setOnClickListener {
             val intent = ShopItemActivity.newIntentAddItem(this)
             startActivity(intent)
-            Log.d("ShopItemActivity", "$it")
         }
     }
 
