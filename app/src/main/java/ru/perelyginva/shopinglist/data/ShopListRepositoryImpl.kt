@@ -1,59 +1,38 @@
 package ru.perelyginva.shopinglist.data
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import ru.perelyginva.shopinglist.data.mappers.ShopListMapper
 import ru.perelyginva.shopinglist.domain.ShopItem
 import ru.perelyginva.shopinglist.domain.repository.ShopListRepository
 import java.io.ObjectStreamException
 import kotlin.random.Random
 
-object ShopListRepositoryImpl : ShopListRepository {
+class  ShopListRepositoryImpl(application: Application) : ShopListRepository {
 
-    private val shopListLD = MutableLiveData<List<ShopItem>>()
-    private val shopList = sortedSetOf<ShopItem>({ p0, p1 -> p0.id.compareTo(p1.id) })
-    private var autoIncrementId = 0
+    private val shopListDao = AppDatabase.getInstance(application).shopListDao()
+    private val mapper = ShopListMapper()
 
-    init {
-        for (i in 0 until 100){
-            val item = ShopItem("Name $i", i, true)
-            addShopItem(item)
-        }
-    }
 
     override fun addShopItem(shopItem: ShopItem) {
-        if (shopItem.id == ShopItem.UNDEFINED_ID) {
-            shopItem.id = autoIncrementId++
-        }
-        shopList.add(shopItem)
-        updateList()
+       shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
     }
 
     override fun deleteShopItem(shopItem: ShopItem) {
-        shopList.remove(shopItem)
-        updateList()
+        shopListDao.deleteShopItem(shopItem.id)
     }
 
     override fun editShopItem(shopItem: ShopItem) {
-        //находим старый элемент по его id
-        val oldElement = getShopItem(shopItem.id)
-        //удаляем старый элемент из коллекции
-        shopList.remove(oldElement)
-        //вставляем новый элемент
-        addShopItem(shopItem)
+        shopListDao.addShopItem(mapper.mapEntityToDbModel(shopItem))
     }
 
     override fun getShopItem(shopItemId: Int): ShopItem {
-        return shopList.find {
-            it.id == shopItemId
-        } ?: throw RuntimeException("Element with id $shopItemId not found")
-        //если shopItemId будет null от будет выброшено исключение
+       val dbModel = shopListDao.getShopItem(shopItemId)
+        return mapper.mapDbModelToEntity(dbModel)
     }
 
-    override fun getShopList(): LiveData<List<ShopItem>> {
-        return shopListLD
-    }
+    override fun getShopList(): LiveData<List<ShopItem>> = shopListDao.getShopList()
 
-    private fun updateList() {
-        shopListLD.value = shopList.toList()
-    }
+
 }

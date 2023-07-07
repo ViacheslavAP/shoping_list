@@ -9,7 +9,7 @@ import ru.perelyginva.shopinglist.R
 import ru.perelyginva.shopinglist.databinding.ActivityShopItemBinding
 import ru.perelyginva.shopinglist.domain.ShopItem
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityShopItemBinding
     private var screenMode = MODE_UNKNOWN
@@ -36,22 +36,31 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
+    override fun onEditingFinished() {
+        super.onEditingFinished()
+        finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityShopItemBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         parseIntent()
-        launchMode()
+        //чтобы запускать фрагмент один раз проверяем первый ли запуск активити
+        if (savedInstanceState == null) {
+            launchRightMode()
+        }
+
     }
 
-    private fun launchMode() {
+    private fun launchRightMode() {
         val fragment = when (screenMode) {
             MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemId)
             MODE_ADD -> ShopItemFragment.newInstanceAddItem()
             else -> throw RuntimeException("Unknown screen mode $screenMode")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, fragment)
             .commit()
     }
 
